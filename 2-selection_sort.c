@@ -7,10 +7,11 @@
  */
 
  void swap(int *a, int *b) {
-    int temp = *a;
-        *a = *b;
-        *b = temp;
-        }
+    int temp;
+    temp = *a;
+    *a = *b;
+    *b = temp;
+}
 
 /**
  * selection_sort - sorts an array of elements
