@@ -2,6 +2,8 @@
 #define __SORT_H__
 
 
+#include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 
