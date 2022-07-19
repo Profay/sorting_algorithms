@@ -1,86 +1,58 @@
 #include "sort.h"
 
+void swap(listint_t *, listint_t *);
+
 /**
- * insertion_sort_list - comparing 1st & 2nd elements and give order
- * @list:list of number
- * Return: None
+ * insertion_sort_list - insertion sort for doubly linked list
+ * @list: double pointer to head of list
  */
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *temp = NULL;
+	listint_t *head, *curr, *prev;
 
-	if (list == NULL || (*list)->next == NULL)
+	head = curr = prev = NULL;
+
+	if (list == NULL || *list == NULL || (*list)->next == NULL)
 		return;
-	temp = *list;
-	while (temp->next)
+	head = *list;
+	while (head->next != NULL)
 	{
-		if (temp->n > temp->next->n)
+		if (head->n > head->next->n)
 		{
-			if (temp->next->next == NULL && temp->prev == NULL)
+			curr = head->next;
+			swap(head, head->next);
+			if (curr->prev == NULL)
+				*list = curr;
+			print_list((const listint_t *) *list);
+			while (curr->prev != NULL)
 			{
-				swap_prev_and_next_null(temp);
-				*list = temp->prev;
+				if (curr->n >= curr->prev->n)
+					break;
+				prev = curr->prev;
+				swap(prev, curr);
+				if (curr->prev == NULL)
+					*list = curr;
+				print_list((const listint_t *) *list);
 			}
-			else if (temp->prev == NULL)
-			{
-				swap_prev_null(temp);
-				*list = temp->prev;
-			}
-			else if (temp->next->next == NULL)
-				swap_next_null(temp);
-			else
-				swap_no_null(temp);
-			print_list(*list);
-			while (temp->prev)
-				temp = temp->prev;
-			continue;
 		}
-		temp = temp->next;
+		else
+			head = head->next;
 	}
 }
+
 /**
- * swap_prev_and_next_null - comparing 1st & 2nd elements and give order
- * @temp:list of number
+ * swap - function to swap two nodes in a doubly linked list
+ * @left: left node to swap
+ * @right: right node to swap
  */
-void swap_prev_and_next_null(listint_t *temp)
+void swap(listint_t *left, listint_t *right)
 {
-	temp->next->prev = NULL;
-	temp->prev = temp->next, temp->next = NULL;
-	temp->prev->next = temp;
-}
-/**
- * swap_prev_null - comparing 1st & 2nd elements and give order
- * @temp:list of number
- */
-void swap_prev_null(listint_t *temp)
-{
-	temp->prev = temp->next;
-	temp->next->next->prev = temp;
-	temp->next->prev = NULL;
-	temp->next = temp->next->next;
-	temp->prev->next = temp;
-}
-/**
- * swap_next_null - comparing 1st & 2nd elements and give order
- * @temp:list of number
- */
-void swap_next_null(listint_t *temp)
-{
-	temp->prev->next = temp->next;
-	temp->next->prev = temp->prev;
-	temp->next->next = temp;
-	temp->prev = temp->next, temp->next = NULL;
-}
-/**
- * swap_no_null - comparing 1st & 2nd elements and give order
- * @temp:list of number
- */
-void swap_no_null(listint_t *temp)
-{
-	temp->next->prev = temp->prev;
-	temp->prev = temp->next;
-	temp->next->next->prev = temp;
-	temp->next->prev->next = temp->next;
-	temp->next = temp->next->next;
-	temp->prev->next = temp;
+	if (left->prev != NULL)
+		left->prev->next = right;
+	if (right->next != NULL)
+		right->next->prev = left;
+	left->next = right->next;
+	right->prev = left->prev;
+	left->prev = right;
+	right->next = left;
 }

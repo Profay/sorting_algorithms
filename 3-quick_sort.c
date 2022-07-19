@@ -1,96 +1,74 @@
 #include "sort.h"
+#include <stdio.h>
 
 /**
- * swap - swap position of the elements passed
+ * partition - partition subarray of `array` around pivot using
+ * Lomuto method (always choose right element).
+ * @array: array to partition
+ * @left: left end of subarray
+ * @right: right end of subarray
+ * @size: size of array
  *
- * @a: pointer the element one
- * @b: pointer the element two
+ * Return: index of pivot after it has been sorted
  */
-
-void swap(int *a, int *b)
+int partition(int *array, int left, int right, size_t size)
 {
-		int temp;
+	int i, j, tmp, pivot;
 
-		temp = *a;
-		*a = *b;
-		*b = temp;
-}
+	pivot = array[right];
+	i = left - 1;
 
-/**
- * partition - split the array using the pivot
- *
- * @array: array to be sorted
- * @start: start of the array
- * @end: end of the array
- * @size: size of the array
- *
- * Return: index of the pivot
- */
-
-int partition(int *array, int start, int end, size_t size)
-{
-	int i;
-	int pivot, pI;
-
-	pivot = array[end];
-	pI = start;
-
-	for (i = start; i < end; i++)
+	for (j = left; j < right; j++)
 	{
-		if (array[i] < pivot)
+		if (array[j] <= pivot)
 		{
-			if (pI != i)
-			{
-				swap(&array[pI], &array[i]);
-				print_array(array, size);
-			}
-			pI++;
+			i++;
+			if (i == j)
+				continue;
+			tmp = array[i];
+			array[i] = array[j];
+			array[j] = tmp;
+			print_array(array, size);
 		}
 	}
-
-	swap(&array[pI], &array[end]);
-
-	if (array[end] != pivot)
+	if (array[right] <= array[i + 1])
 	{
+		i++;
+		if (i == right)
+			return (i);
+		tmp = array[i];
+		array[i] = array[right];
+		array[right] = tmp;
 		print_array(array, size);
 	}
-	return (pI);
+	return (i);
 }
 
 /**
- * quick_recursive - recursive function for quick_sort function
- *
- * @array: array to be sorted
- * @start: start of array
- * @end: end of array
+ * _quick_sort - recursively partition array until it is fully sorted
+ * @array: array to sort
+ * @left: left side of subarray for recursion
+ * @right: right side of subarray for recursion
  * @size: size of array
  */
-
-void quick_recursive(int *array, int start, int end, size_t size)
+void _quick_sort(int *array, int left, int right, size_t size)
 {
-	int pI;
+	int p;
 
-	if (start >= end || start < 0)
-		return;
-
-	pI = partition(array, start, end, size);
-	quick_recursive(array, start, pI - 1, size);
-	quick_recursive(array, pI + 1, end, size);
+	if (left < right)
+	{
+		p = partition(array, left, right, size);
+		_quick_sort(array, left, p - 1, size);
+		_quick_sort(array, p + 1, right, size);
+	}
 }
 
 /**
- * quick_sort - calls quit sort function for each element
- *
- * @array: array to be sorted
+ * quick_sort - wrapper around recursive quicksort function
+ * @array: array to sort
  * @size: size of array
  */
-
 void quick_sort(int *array, size_t size)
 {
-	size_t start, end;
-
-	start = 0;
-	end = size - 1;
-
-	quick_recursive(array, start, end, size);
+	_quick_sort(array, 0, size - 1, size);
 }

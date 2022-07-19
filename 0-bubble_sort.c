@@ -1,39 +1,26 @@
 #include "sort.h"
+
 /**
- * bubble_sort - comparing 1st & 2nd elements to check which one is greater
- * @array:list of number
- * @size:size of array
- * Return: None
+ * bubble_sort - the worst sorting algorithm
+ * @array: array to be sorted in place
+ * @size: size of array
  */
 void bubble_sort(int *array, size_t size)
 {
 	size_t i, j;
+	int max;
 
-	if (size < 2)
-		return;
-	else
-		for (i = 0; i < size - 1; i++)
+	for (i = size; i > 1; i--)
+	{
+		for (j = 0; j < i - 1; j++)
 		{
-			for (j = 0; j < size - i - 1; j++)
+			if (array[j] > array[j + 1])
 			{
-				if (array[j] > array[j + 1])
-				{
-					swap(&array[j], &array[j + 1]);
-					print_array(array, size);
-				}
+				max = array[j];
+				array[j] = array[j + 1];
+				array[j + 1] = max;
+				print_array(array, size);
 			}
 		}
-}
-/**
- * swap - swap the 2 elements
- * @x:element
- * @y:element
- * Return: None
- */
-void swap(int *x, int *y)
-{
-	int temp = *x;
-
-	*x = *y;
-	*y = temp;
+	}
 }
